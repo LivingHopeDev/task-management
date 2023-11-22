@@ -72,6 +72,21 @@ app.post("/api/tasks", verifyUser, (req, res) => {
   }
 });
 
+app.get("/api/tasks", verifyUser, (req, res) => {
+  if (tasks.length === 0) {
+    return res.json({ message: "No tasks yet" });
+  }
+
+  const userTasks = tasks.filter((task) => task.username === req.session.user);
+
+  if (userTasks.length === 0) {
+    return res.json({ message: "No tasks for the current user" });
+  } else {
+    const newTasks = userTasks.map(({ newTask }) => newTask);
+    res.status(200).json(newTasks);
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Server is runing on port ${PORT}`);
 });
