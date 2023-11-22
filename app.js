@@ -48,6 +48,30 @@ app.post("/api/login", (req, res) => {
   }
 });
 
+const tasks = [];
+
+// Middleware to check authentication
+const verifyUser = (req, res, next) => {
+  if (!req.session.user) {
+    return res.status(401).json({ message: "Unauthorized:You have to login" });
+  }
+  next();
+};
+
+app.post("/api/tasks", verifyUser, (req, res) => {
+  const { title, description, dueDate } = req.body;
+  if (!title || !description || !dueDate) {
+    return res.status(422).json({ message: "All fields are required" });
+  }
+  try {
+    const newTask = { title, description, dueDate, status: "pending" };
+    tasks.push({ username: req.session.user, newTask });
+    res.status(201).json({ message: "Task created" });
+  } catch (error) {
+    res.status(500).json({ message: "server error" });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Server is runing on port ${PORT}`);
 });
