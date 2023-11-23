@@ -59,12 +59,12 @@ const verifyUser = (req, res, next) => {
 };
 
 app.post("/api/tasks", verifyUser, (req, res) => {
-  const { title, description, dueDate } = req.body;
-  if (!title || !description || !dueDate) {
+  const { id, title, description, dueDate } = req.body;
+  if (!id || !title || !description || !dueDate) {
     return res.status(422).json({ message: "All fields are required" });
   }
   try {
-    const newTask = { title, description, dueDate, status: "pending" };
+    const newTask = { id, title, description, dueDate, status: "pending" };
     tasks.push({ username: req.session.user, newTask });
     res.status(201).json({ message: "Task created" });
   } catch (error) {
