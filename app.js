@@ -88,19 +88,17 @@ app.get("/api/tasks", verifyUser, (req, res) => {
 });
 
 app.put("/api/tasks/:id", verifyUser, (req, res) => {
-  const taskId = req.params.id;
+  const taskId = Number(req.params.id);
   const { title, description, dueDate, status } = req.body;
-  const taskIndex = tasks.findIndex(
-    (task) => task.newTask.id === Number(taskId)
-  );
+  const taskIndex = tasks.findIndex((task) => task.newTask.id === taskId);
   if (taskIndex === -1) {
     return res.status(404).json({ message: "Task not found" });
   }
   try {
     tasks[taskIndex] = {
-      id: taskId,
       username: req.session.user,
       newTask: {
+        id: taskId,
         title,
         description,
         dueDate,
