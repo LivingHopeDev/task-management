@@ -124,7 +124,7 @@ app.delete("/api/tasks/:id", verifyUser, (req, res) => {
   try {
     tasks.splice(taskIndex, 1);
 
-    res.json({ message: "Task deleted successfully" });
+    res.status(200).json({ message: "Task deleted successfully" });
   } catch (error) {
     res.status(500).json({ message: "server error" });
   }
