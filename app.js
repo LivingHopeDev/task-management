@@ -132,6 +132,28 @@ app.delete("/api/tasks/:id", verifyUser, (req, res) => {
   }
 });
 
+app.put("/api/tasks/:id/status", verifyUser, (req, res) => {
+  const taskId = req.params.id;
+  const taskIndex = tasks.findIndex(
+    (task) => task.newTask.id === Number(taskId)
+  );
+  if (taskIndex === -1) {
+    return res.status(404).json({ message: "Task not found" });
+  }
+  try {
+    const taskStatus = tasks[taskIndex].newTask.status;
+    if (taskStatus === "pending") {
+      tasks[taskIndex].newTask.status = "completed";
+      res.status(200).json({ message: "Task completed" });
+    } else {
+      tasks[taskIndex].newTask.status = "pending";
+      res.status(200).json({ message: "Task pending" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: "server error" });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Server is runing on port ${PORT}`);
 });
