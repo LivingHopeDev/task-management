@@ -113,6 +113,25 @@ app.put("/api/tasks/:id", verifyUser, (req, res) => {
   }
 });
 
+app.delete("/api/tasks/:id", verifyUser, (req, res) => {
+  const taskId = req.params.id;
+
+  const taskIndex = tasks.findIndex(
+    (task) => task.newTask.id === Number(taskId)
+  );
+
+  if (taskIndex === -1) {
+    return res.status(404).json({ message: "Task not found" });
+  }
+  try {
+    tasks.splice(taskIndex, 1);
+
+    res.json({ message: "Task deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "server error" });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Server is runing on port ${PORT}`);
 });
